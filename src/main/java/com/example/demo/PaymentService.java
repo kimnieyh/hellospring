@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -18,11 +20,20 @@ public class PaymentService {
         String response = br.lines().collect(Collectors.joining());
         br.close();
 
-        System.out.println(response);
+        ObjectMapper mapper = new ObjectMapper();
+        ExRateData data = mapper.readValue(response, ExRateData.class);
+
+        BigDecimal exRate = data.rates().get("KRW");
+        System.out.println(exRate);
+
         // 금액 계산
+        BigDecimal convertedAmount = foreignCurrencyAmount.multiply(exRate);
+
         // 유효시간 계산
-        return new Payment(orderId,currency,foreignCurrencyAmount, BigDecimal.ZERO, BigDecimal.ZERO,
-                LocalDateTime.now());
+        LocalDateTime validUntil = LocalDateTime.now().plusMinutes(30);
+
+        return new Payment(orderId,currency,foreignCurrencyAmount, exRate, convertedAmount,
+                validUntil);
     }
 
     public static void main(String[] args) throws IOException {
