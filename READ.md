@@ -45,3 +45,6 @@ Client의 기능이 제대로 동작하려면 Supplier가 필요
 Client가 Supplier를 사용, 호출, 생성, 인스턴스화, 전송
 Supplier가 변경되면 Client 코드가 영향을 받는다.
 클래스 레벨(코드레벨)의 의존관계
+
+
+### 관심사의 분리 SoC (Separation of Concerns)
